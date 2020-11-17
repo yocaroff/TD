@@ -8,7 +8,7 @@ class Rest{
         return $.post('rest/', data)
     }
 
-    static put(data){//table, id, fields (k,v)
+    static put(table,data){//table, id, fields (k,v)
         return $.ajax({
             url : 'rest/',
             type : 'PUT',
@@ -16,7 +16,7 @@ class Rest{
         })
     }
 
-    static delete(data){//table, id
+    static delete(table, data){//table, id
         return $.ajax({
             url : 'rest/',
             type : 'DELETE',

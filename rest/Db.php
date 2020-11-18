@@ -46,115 +46,92 @@ class Db
 
 	static function select($table, $id, $where, $orderby){
 		$param = [];
-		
-
-
-
-        if (isset($id)) {
-			$where .= " AND id = ?";
-			$param[] = $id; 
-			echo 'id';
-		};
-		if (isset($sorter)) {
-			foreach($sorter as $k => $v){
-				$where .= "AND ".$k." = ?";
-				$param[] = $v;  
-				echo 'sorter';
-			};
-		};
-		$order = "id";
-		if (isset($orderby)) {
-			$order = "";
-			foreach($orderby as $k){
-				$order .= $k.", ";
-			}
-			$order = substr($order, 0, -2);
+		if ($where == null){
+			$where = "active = ?";
+			$param[] = 1;
 		}
-		$sql = "SELECT * FROM $table WHERE $where ORDER BY $order";
+		if ($id != null){
+			$where .= " AND id = ?";
+			$param[] = $id;
+		}
+		if ($orderby == null){
+			$orderby = "id ASC";
+		}
+		$sql = "SELECT * FROM $table WHERE $where ORDER BY $orderby";
+
 		$resp = self::query($sql, $param);
         $rows = Db::$stmt->fetchAll(PDO::FETCH_ASSOC);
 		return json_encode($rows);
 	}
 
+	static function update($table, $id, $fields){
+		$set = "";
+		$param = [];
+		// empèche la modification de l'id
+		if (isset($fields) && isset($fields['id'])) {
+			unset($fields['id']);
+		}
+		foreach($fields as $k => $v){
+			$set .= $k."=?, ";
+			$param[] = $v;
+		}
+		$set = substr($set, 0, -2);
+		$where = "id = ?";
+		$param[] = $id;
+		$sql = "UPDATE $table SET $set WHERE $where";
 
+		$resp = self::query($sql, $param);
+        $rows = Db::$stmt->fetchAll(PDO::FETCH_ASSOC);
+		return json_encode($rows);
+	}
 
-	// public function update($table, $paramètre){
-	// 	$sql = "update $table";
-	// 	$param = null;
-	// 	if(!empty($paramètre)){
-	// 		$param = [];
-	// 		$str = '';
-	// 		$tempo = '';
-	// 		$sql .= ' set ';
-	// 		foreach($paramètre as $key => $value){
-	// 			if ($key == "id") {
-	// 				$str = " where $key = ?";
-	// 				$tempo = $value;
-	// 			}
-	// 			else {
-	// 				$sql .= $key.' = ?, ';
-	// 				$param[] = $value;
-	// 			}
-	// 		}
-	// 		$sql = substr($sql, 0, -2);
-	// 	}
-	// 	$param[] = $tempo;
-	// 	$sql .= $str;
-	// 	if(!$connexion=self::$_instance->query($sql,$param)){
-	// 		echo 'error';
-	// 	};	
-	// }
+	static function delete($table, $id){
+		$where = 'id =?';
+		$param = [$id];
+		$sql = "DELETE FROM $table WHERE $where";
 
-	// public function delete($table, $paramètre){
-	// 	$sql = "delete from $table";
-	// 	$param = null;
-	// 	if(!empty($paramètre)){
-	// 		$param = [];
-	// 		$sql .= ' where';
-	// 		foreach($paramètre as $key => $value){
-	// 			$sql .= ' '.$key.' = ? and';
-	// 			$param[] = $value;
-	// 		}
-	// 		$sql = substr($sql, 0, -4);
-	// 	}
-	// 	if(!$connexion=self::$_instance->query($sql,$param)){
-	// 		echo 'error';
-	// 	};	
-	// }
+		echo $sql;
+		var_dump($param);
 
-	// public function insert($table, $paramètre){
-	// 	$sql = "insert into $table ";
-	// 	$col = '';
-	// 	$val = '';
-	// 	$param = null;
-	// 	if(!empty($paramètre)){
-	// 		$param = [];
-	// 		foreach($paramètre as $key => $value){
-	// 			$param[] = $value;
-	// 			$col .= "$key, ";//$key
-	// 			$val .= '?, ';//$value	
-	// 		}
-	// 		$col = substr($col, 0, -2);
-	// 		$val = substr($val, 0, -2);
-	// 	}
-	// 	$sql .= '('.$col.') values ('.$val.')';
-	// 	if(!$connexion=self::$_instance->query($sql,$param)){
-	// 		echo 'error';
-	// 	};
-	// }
+		$resp = self::query($sql, $param);
+        $rows = Db::$stmt->fetchAll(PDO::FETCH_ASSOC);
+		return json_encode($rows);
+	}
 
-	// public function recup() {
-	// 	$sql = "show tables";
+	static function insert($table, $fields) {
+		// empèche la modification de l'id
+		if (isset($fields) && isset($fields['id'])) {
+			unset($fields['id']);
+		};
+		if (!(isset($fields))) {
+			$fields = [];
+			$fields['id'] = null;
+		}
+		$key = '';
+		$value = '';
+		$param = [];
+		if (isset($fields)) {
+		foreach($fields as $k => $v) {
+			$key .= $k.', ';
+			$value .= '"?", ';
+			$param[] = $v;
+		} }
+		$key = substr($key, 0, -2);
+		$value = substr($value, 0, -2);
+		$sql = "INSERT INTO $table ($key) VALUES ($value)";
+
+		$resp = self::query($sql, $param);
+        $rows = Db::$stmt->fetchAll(PDO::FETCH_ASSOC);
+		return json_encode($rows);
+	}
+
+	public function showTables() {
+		$sql = "show tables";
+		$param = null;
 		
-	// 	if(!$connexion=self::$_instance->query($sql, null)){
-	// 		echo 'error';
-	// 	}else{
-	// 		$rows = $connexion->fetchAll(PDO::FETCH_ASSOC);
-	// 		if (count($rows) == 0) {
-	// 			$rows = null;
-	// 		}
-	// 		return json_encode($rows);
-	// 	}
+		$resp = self::query($sql, $param);
+        $rows = Db::$stmt->fetchAll(PDO::FETCH_ASSOC);
+		return json_encode($rows);
+	}
 
-	// }
 }

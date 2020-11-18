@@ -25,5 +25,4 @@ class App {
         let hash = (window.location.hash || "#accueil").substring(1);
         $('main').hide().html(hash).fadeIn(100)
     }
-
 }

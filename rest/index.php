@@ -21,11 +21,11 @@ switch ($_SERVER["REQUEST_METHOD"]) {
         $_post = validate_request($_POST);
         //table obligatoire
         $table = isset($_post['table']) ? $_post['table'] : null;
-        // if ($table == null) {
-        //     break;
-        // }
+        if ($table == null) {
+            break;
+        }
         $params = isset($_post['params']) ? $_post['params'] : null;
-        echo Db::insert('product', null /*['name' => 'pastore', 'firstname' => 'JP', 'age' => 47]*/);
+        echo Db::insert($table, $params);
         break;
     case 'PUT':
         $_put = json_decode(file_get_contents('php://input'), true);

@@ -39,7 +39,7 @@ class Db
             Db::$stmt = $stmt;
             $result = $stmt->execute($params);
         } catch (PDOException $e) {
-            //var_dump($e);
+            var_dump($e);
         }
         return $result;
     }
@@ -81,8 +81,7 @@ class Db
 		$sql = "UPDATE $table SET $set WHERE $where";
 
 		$resp = self::query($sql, $param);
-        $rows = Db::$stmt->fetchAll(PDO::FETCH_ASSOC);
-		return json_encode($rows);
+        return json_encode($resp);
 	}
 
 	static function delete($table, $id){
@@ -90,12 +89,11 @@ class Db
 		$param = [$id];
 		$sql = "DELETE FROM $table WHERE $where";
 
-		echo $sql;
-		var_dump($param);
+		// echo $sql;
+		// var_dump($param);
 
 		$resp = self::query($sql, $param);
-        $rows = Db::$stmt->fetchAll(PDO::FETCH_ASSOC);
-		return json_encode($rows);
+        return json_encode($resp);
 	}
 
 	static function insert($table, $fields) {
@@ -113,7 +111,7 @@ class Db
 		$param = [];
 		foreach($fields as $k => $v) {
 			$key .= $k.', ';
-			$value .= '?, ';
+			$value .= '"?", ';
 			$param[] = $v;
 		};
 		$key = substr($key, 0, -2);
@@ -121,11 +119,15 @@ class Db
 		$sql = "INSERT INTO $table ($key) VALUES ($value)";
 
 		$resp = self::query($sql, $param);
-		var_dump(Db::$stmt);
-		var_dump($param);
-		var_dump($resp);
-        $rows = Db::$stmt->fetchAll(PDO::FETCH_ASSOC);
-		return json_encode($rows);
+		// var_dump(Db::$stmt);
+		// var_dump($param);
+		// var_dump($resp);
+		// $rows = Db::$stmt->fetchAll(PDO::FETCH_ASSOC);
+		if ($resp) {
+			$resp = self::$db->lastInsertId();
+		}
+		// var_dump($resp);
+		return json_encode($resp);
 	}
 
 	public function showTables() {

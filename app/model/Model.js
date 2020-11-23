@@ -16,7 +16,6 @@ class Model{
 
     insert(){
         let table = this.constructor.name.toLowerCase();
-        console.log(this);
         let params = this;
         let deferred = $.Deferred();
         console.log('insert into '+table);

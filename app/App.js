@@ -1,6 +1,14 @@
 class App {
 
     static start() {
+        //chargement de la page
+        $(document).ready(function() {
+            console.clear();
+            App.loadClasses().done(() => {
+                Utils.init();
+                App.browse();
+            });
+        }); 
 
         //onpopstate
         window.onpopstate = function() {
@@ -14,15 +22,6 @@ class App {
                 btn ? btn.click() : null;
             }
         }) 
-
-        //chargement de la page
-        $(document).ready(function() {
-            console.clear();
-            App.loadClasses().done(() => {
-                Utils.init();
-                App.browse();
-            });
-        }); 
     }
 
     static browse() {
@@ -67,14 +66,20 @@ class App {
     }
 
     static test() {
-        
-        let product = new Product();
-        // // TODO Step 5
-        product.insert();
-
-        // let category = new Category();
-        // // TODO Step 5
-                
-        // $('#main').hide().html("TEST").fadeIn();
+        let product = new Product({ id: 160, active: false, category_id: 3, title: 'ABC', description: 'DEF', price: 10.5, onsale: false, ord: 100 });
+        console.log(product);
+        product.insert().done((resp) => {
+            console.log(resp);
+            product.title = 'ABCZ';
+            product.description = 'DEFZ';
+            product.active = true;
+            product.onsale = true;
+            product.update().done((resp) => {
+                console.log(resp);
+                product.delete().done((resp) => {
+                    console.log(resp);
+                })
+            })
+        })
     }
 }   

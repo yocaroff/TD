@@ -17,7 +17,7 @@ switch ($_SERVER["REQUEST_METHOD"]) {
         $orderby = isset($_get['orderby']) ? $_get['orderby'] : null;
         echo Db::select($table, $id, $where, $orderby);
         break;
-    // case 'POST':
+    case 'POST':
     //     $_post = validate_request($_POST);
         $_post = json_decode(file_get_contents('php://input'), true);
         $_post = validate_request($_post);

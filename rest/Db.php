@@ -103,24 +103,27 @@ class Db
 		if (isset($fields) && isset($fields['id'])) {
 			unset($fields['id']);
 		};
-		if (!(isset($fields))) {
+		// permet d'insérer une ligne vierge
+		if (!isset($fields)) {
 			$fields = [];
 			$fields['id'] = null;
 		}
 		$key = '';
 		$value = '';
 		$param = [];
-		if (isset($fields)) {
 		foreach($fields as $k => $v) {
 			$key .= $k.', ';
-			$value .= '"?", ';
+			$value .= '?, ';
 			$param[] = $v;
-		} }
+		};
 		$key = substr($key, 0, -2);
 		$value = substr($value, 0, -2);
 		$sql = "INSERT INTO $table ($key) VALUES ($value)";
 
 		$resp = self::query($sql, $param);
+		var_dump(Db::$stmt);
+		var_dump($param);
+		var_dump($resp);
         $rows = Db::$stmt->fetchAll(PDO::FETCH_ASSOC);
 		return json_encode($rows);
 	}

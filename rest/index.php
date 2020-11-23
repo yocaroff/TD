@@ -19,7 +19,9 @@ switch ($_SERVER["REQUEST_METHOD"]) {
         break;
     case 'POST':
         $_post = validate_request($_POST);
-        //table obligatoire
+        // $_post = json_decode(file_get_contents('php://input'), true);
+        // var_dump($_post);
+        // $_post = validate_request($_post);
         $table = isset($_post['table']) ? $_post['table'] : null;
         if ($table == null) {
             break;

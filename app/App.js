@@ -1,6 +1,7 @@
 class App {
 
     static start() {
+
         //onpopstate
         window.onpopstate = function() {
             App.browse();
@@ -16,19 +17,24 @@ class App {
 
         //chargement de la page
         $(document).ready(function() {
-            App.browse()
+            console.clear();
+            App.loadClasses().done(() => {
+                Utils.init();
+                App.browse();
+            });
         }); 
     }
 
     static browse() {
         //récupérer le hash et l'afficher dans main
         let hash = (window.location.hash || "#accueil").substring(1);
-        $('main').hide().html(hash).fadeIn(100)
+        App.test();
+        // $('main').hide().html(hash).fadeIn(100);
     }
 
-    static classes = ['Utils', 'Rest', 'model/Model'];
+    static classes = ["Utils", "Rest", "model/Model"];
 
-    static extends = ['model/Product', 'model/Category']
+    static extends = ["model/Product", "model/Category"];
 
     static loadClasses() {
         let deferred = $.Deferred();
@@ -36,10 +42,12 @@ class App {
             return App.getScript("app/"+cl+".js");
         });
         $.when.apply($, _classes).then(() => {
-            let _extends = $.map(App.classes, (cl)=> {
+            console.log('classes chargées');
+            let _extends = $.map(App.extends, (cl)=> {
                 return App.getScript("app/"+cl+".js");
             })
             $.when.apply($, _extends).then(() => {
+                console.log('extends chargés');
                 deferred.resolve();
             });
         });
@@ -52,7 +60,7 @@ class App {
         script.src = scriptUrl;
         script.defer = true;
         script.onload = function () {
-            deferred.resolve();
+            deferred.resolve()
         };
         document.body.appendChild(script);
         return deferred.promise();
@@ -61,12 +69,12 @@ class App {
     static test() {
         
         let product = new Product();
-        // TODO Step 5
+        // // TODO Step 5
+        product.insert();
 
-        let category = new Category();
-        // TODO Step 5
-        
-        
-        $('#main').hide().html("TEST").fadeIn();
+        // let category = new Category();
+        // // TODO Step 5
+                
+        // $('#main').hide().html("TEST").fadeIn();
     }
 }   

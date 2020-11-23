@@ -24,4 +24,11 @@ class Rest{
         })
     }
 
+    static showTables(){
+        return $.ajax({
+            url : 'rest/',
+            type : 'SHOWTABLES',
+        })
+    }
+
 }

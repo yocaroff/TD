@@ -5,7 +5,7 @@ class Rest{
     }
 
     static post(data){//table, fields (k,v)
-        return $.post('rest/', data)
+        return $.post('rest/', JSON.stringify(data))
     }
 
     static put(table,data){//table, id, fields (k,v)

@@ -1,7 +1,8 @@
 class Product extends Model{
 
     constructor(obj) {
-        /* TODO */
+        super(obj);
+        super.assign(obj);
     }
 
     id = 0;

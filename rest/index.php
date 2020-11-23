@@ -50,6 +50,9 @@ switch ($_SERVER["REQUEST_METHOD"]) {
         }
         echo Db::delete($table, $param);
         break;
+    case 'SHOWTABLES':
+        echo Db::showTables();
+    break;
 }
 
 function validate_request($request)

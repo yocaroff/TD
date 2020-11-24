@@ -42,7 +42,7 @@ class Model{
         let deferred = $.Deferred();
         let params = this;
         console.log('update from '+table);
-        Rest.put({table, id, params}).done((resp)=>{
+        Rest.put(table, id, params).done((resp)=>{
             let json = resp.tryJsonParse();
             if(json){
                 deferred.resolve(json);
@@ -65,7 +65,7 @@ class Model{
         let id = this.id;
         let deferred = $.Deferred();
         console.log('delete from '+table);
-        Rest.delete({table, id}).done((resp)=>{
+        Rest.delete(table, id).done((resp)=>{
             let json = resp.tryJsonParse();
             if(json){
                 deferred.resolve(json);

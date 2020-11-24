@@ -79,7 +79,7 @@ class Db
 		$where = "id = ?";
 		$param[] = $id;
 		$sql = "UPDATE $table SET $set WHERE $where";
-
+		
 		$resp = self::query($sql, $param);
         return json_encode($resp);
 	}
@@ -111,7 +111,7 @@ class Db
 		$param = [];
 		foreach($fields as $k => $v) {
 			$key .= $k.', ';
-			$value .= '"?", ';
+			$value .= '?, ';
 			$param[] = $v;
 		};
 		$key = substr($key, 0, -2);
@@ -119,14 +119,9 @@ class Db
 		$sql = "INSERT INTO $table ($key) VALUES ($value)";
 
 		$resp = self::query($sql, $param);
-		// var_dump(Db::$stmt);
-		// var_dump($param);
-		// var_dump($resp);
-		// $rows = Db::$stmt->fetchAll(PDO::FETCH_ASSOC);
 		if ($resp) {
 			$resp = self::$db->lastInsertId();
 		}
-		// var_dump($resp);
 		return json_encode($resp);
 	}
 

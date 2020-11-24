@@ -66,20 +66,20 @@ class App {
     }
 
     static test() {
-        let product = new Product({ id: 160, active: false, category_id: 3, title: 'ABC', description: 'DEF', price: 10.5, onsale: false, ord: 100 });
-        console.log(product);
-        product.insert().done((resp) => {
-            console.log(resp);
-            product.title = 'ABCZ';
-            product.description = 'DEFZ';
-            product.active = true;
-            product.onsale = true;
-            product.update().done((resp) => {
-                console.log(resp);
-                product.delete().done((resp) => {
-                    console.log(resp);
-                })
-            })
-        })
+        let product = new Product({id : 100, active: false, category_id: 3, title: 'ABC', description: 'DEF', price: 10.5, onsale: false, ord: 100 });
+        // console.log(product);
+        // product.delete().done((resp) => {
+        //     console.log(resp);
+            // product.title = 'ABCZ';
+            // product.description = 'DEFZ';
+            // product.active = true;
+            // product.onsale = true;
+            // // product.update().done((resp) => {
+            //     console.log(resp);
+                // product.delete().done((resp) => {
+                //     console.log(resp);
+                // })
+            // })
+        // })
     }
 }   

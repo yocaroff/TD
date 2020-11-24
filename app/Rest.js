@@ -8,19 +8,19 @@ class Rest{
         return $.post('rest/', JSON.stringify(data))
     }
 
-    static put(table,data){//table, id, fields (k,v)
+    static put(table, id, params){//table, id, fields (k,v)
         return $.ajax({
             url : 'rest/',
             type : 'PUT',
-            data : JSON.stringify({table, data})
+            data : JSON.stringify({table, id, params})
         })
     }
 
-    static delete(table, data){//table, id
+    static delete(table, id){//table, id
         return $.ajax({
             url : 'rest/',
             type : 'DELETE',
-            data : JSON.stringify({table, data})
+            data : JSON.stringify({table, id})
         })
     }
 

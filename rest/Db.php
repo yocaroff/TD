@@ -81,6 +81,7 @@ class Db
 		$sql = "UPDATE $table SET $set WHERE $where";
 		
 		$resp = self::query($sql, $param);
+		$resp = $resp && Db::$stmt->rowCount() == 1;
         return json_encode($resp);
 	}
 
@@ -125,7 +126,7 @@ class Db
 		return json_encode($resp);
 	}
 
-	public function showTables() {
+	public static function showTables() {
 		$sql = "show tables";
 		$param = null;
 		

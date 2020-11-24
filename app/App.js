@@ -68,8 +68,8 @@ class App {
     static test() {
         let product = new Product({id : 100, active: false, category_id: 3, title: 'ABC', description: 'DEF', price: 10.5, onsale: false, ord: 100 });
         // console.log(product);
-        // product.delete().done((resp) => {
-        //     console.log(resp);
+        Model.showTables().done((resp) => {
+            console.log(resp);
             // product.title = 'ABCZ';
             // product.description = 'DEFZ';
             // product.active = true;
@@ -80,6 +80,6 @@ class App {
                 //     console.log(resp);
                 // })
             // })
-        // })
+        })
     }
 }   

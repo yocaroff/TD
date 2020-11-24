@@ -1,27 +1,27 @@
-class Model{
+class Model {
 
-    assign(obj){
-        for(let k in obj){
-            if(this[k] != undefined && typeof this[k] == 'number'){
+    assign(obj) {
+        for (let k in obj) {
+            if (this[k] != undefined && typeof this[k] == 'number') {
                 this[k] = Number(obj[k])
             }
-            else if(this[k] != undefined && typeof this[k] == 'boolean'){
+            else if (this[k] != undefined && typeof this[k] == 'boolean') {
                 this[k] = (obj[k] == ("1" || true)) ? true : false;
             }
-            else{
+            else {
                 this[k] = obj[k]
             }
         }
     }
 
-    insert(){
+    insert() {
         let table = this.constructor.name.toLowerCase();
         let params = this;
         let deferred = $.Deferred();
-        console.log('insert into '+table);
-        Rest.post({table, params}).done((resp)=>{
+        console.log('insert into ' + table);
+        Rest.post({ table, params }).done((resp) => {
             let json = resp.tryJsonParse();
-            if(json){
+            if (json) {
                 deferred.resolve(json);
             }
             else {
@@ -36,15 +36,21 @@ class Model{
         // TODO Step 5
     }
 
-    update(){
+    update() {
         let table = this.constructor.name.toLowerCase();
         let id = this.id;
+        // TODO oldProduct à modifier avec select(table, id)
+        //  let oldProduct = new Product({id : 100, active: false, category_id: 3, title: 'ABC', description: 'DEF', price: 10.5, onsale: false, ord: 100 });
+        //  let res = false;
         let deferred = $.Deferred();
         let params = this;
-        console.log('update from '+table);
-        Rest.put(table, id, params).done((resp)=>{
+        // oldProduct.forEach(k => {
+        //     console.log(oldProduct[k])
+        // });
+        console.log('update from ' + table);
+        Rest.put(table, id, params).done((resp) => {
             let json = resp.tryJsonParse();
-            if(json){
+            if (json) {
                 deferred.resolve(json);
             }
             else {
@@ -60,14 +66,14 @@ class Model{
         // TODO Step 5
     }
 
-    delete(){
+    delete() {
         let table = this.constructor.name.toLowerCase();
         let id = this.id;
         let deferred = $.Deferred();
-        console.log('delete from '+table);
-        Rest.delete(table, id).done((resp)=>{
+        console.log('delete from ' + table);
+        Rest.delete(table, id).done((resp) => {
             let json = resp.tryJsonParse();
-            if(json){
+            if (json) {
                 deferred.resolve(json);
             }
             else {
@@ -80,11 +86,27 @@ class Model{
         //Q? Quels sont les paramètres attendus par Rest.delete ?
         //Q? Que renvoi Rest.delete ?
         // TODO Step 5
-        
+
     }
 
-    static select(id){
-        
+    static showTables() {
+        let deferred = $.Deferred();
+        Rest.showTables().done((resp) => {
+            let json = resp.tryJsonParse();
+            if (json) {
+                deferred.resolve(json);
+            }
+            else {
+                deferred.reject(json);
+            }
+        }).fail((resp) => {
+            deferred.reject(json);
+        });
+        return deferred.promise();
+    }
+
+    static select(id) {
+
     }
 
 }

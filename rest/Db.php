@@ -39,7 +39,7 @@ class Db
             Db::$stmt = $stmt;
             $result = $stmt->execute($params);
         } catch (PDOException $e) {
-            //var_dump($e);
+            var_dump($e);
         }
         return $result;
     }
@@ -79,10 +79,9 @@ class Db
 		$where = "id = ?";
 		$param[] = $id;
 		$sql = "UPDATE $table SET $set WHERE $where";
-
+		
 		$resp = self::query($sql, $param);
-        $rows = Db::$stmt->fetchAll(PDO::FETCH_ASSOC);
-		return json_encode($rows);
+        return json_encode($resp);
 	}
 
 	static function delete($table, $id){
@@ -90,12 +89,11 @@ class Db
 		$param = [$id];
 		$sql = "DELETE FROM $table WHERE $where";
 
-		echo $sql;
-		var_dump($param);
+		// echo $sql;
+		// var_dump($param);
 
 		$resp = self::query($sql, $param);
-        $rows = Db::$stmt->fetchAll(PDO::FETCH_ASSOC);
-		return json_encode($rows);
+        return json_encode($resp);
 	}
 
 	static function insert($table, $fields) {
@@ -103,26 +101,28 @@ class Db
 		if (isset($fields) && isset($fields['id'])) {
 			unset($fields['id']);
 		};
-		if (!(isset($fields))) {
+		// permet d'insérer une ligne vierge
+		if (!isset($fields)) {
 			$fields = [];
 			$fields['id'] = null;
 		}
 		$key = '';
 		$value = '';
 		$param = [];
-		if (isset($fields)) {
 		foreach($fields as $k => $v) {
 			$key .= $k.', ';
-			$value .= '"?", ';
+			$value .= '?, ';
 			$param[] = $v;
-		} }
+		};
 		$key = substr($key, 0, -2);
 		$value = substr($value, 0, -2);
 		$sql = "INSERT INTO $table ($key) VALUES ($value)";
 
 		$resp = self::query($sql, $param);
-        $rows = Db::$stmt->fetchAll(PDO::FETCH_ASSOC);
-		return json_encode($rows);
+		if ($resp) {
+			$resp = self::$db->lastInsertId();
+		}
+		return json_encode($resp);
 	}
 
 	public function showTables() {

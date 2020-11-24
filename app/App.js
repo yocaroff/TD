@@ -1,6 +1,15 @@
 class App {
 
     static start() {
+        //chargement de la page
+        $(document).ready(function() {
+            console.clear();
+            App.loadClasses().done(() => {
+                Utils.init();
+                App.browse();
+            });
+        }); 
+
         //onpopstate
         window.onpopstate = function() {
             App.browse();
@@ -13,22 +22,18 @@ class App {
                 btn ? btn.click() : null;
             }
         }) 
-
-        //chargement de la page
-        $(document).ready(function() {
-            App.browse()
-        }); 
     }
 
     static browse() {
         //récupérer le hash et l'afficher dans main
         let hash = (window.location.hash || "#accueil").substring(1);
-        $('main').hide().html(hash).fadeIn(100)
+        App.test();
+        // $('main').hide().html(hash).fadeIn(100);
     }
 
-    static classes = ['Utils', 'Rest', 'model/Model'];
+    static classes = ["Utils", "Rest", "model/Model"];
 
-    static extends = ['model/Product', 'model/Category']
+    static extends = ["model/Product", "model/Category"];
 
     static loadClasses() {
         let deferred = $.Deferred();
@@ -36,10 +41,12 @@ class App {
             return App.getScript("app/"+cl+".js");
         });
         $.when.apply($, _classes).then(() => {
-            let _extends = $.map(App.classes, (cl)=> {
+            console.log('classes chargées');
+            let _extends = $.map(App.extends, (cl)=> {
                 return App.getScript("app/"+cl+".js");
             })
             $.when.apply($, _extends).then(() => {
+                console.log('extends chargés');
                 deferred.resolve();
             });
         });
@@ -52,21 +59,27 @@ class App {
         script.src = scriptUrl;
         script.defer = true;
         script.onload = function () {
-            deferred.resolve();
+            deferred.resolve()
         };
         document.body.appendChild(script);
         return deferred.promise();
     }
 
     static test() {
-        
-        let product = new Product();
-        // TODO Step 5
-
-        let category = new Category();
-        // TODO Step 5
-        
-        
-        $('#main').hide().html("TEST").fadeIn();
+        let product = new Product({id : 100, active: false, category_id: 3, title: 'ABC', description: 'DEF', price: 10.5, onsale: false, ord: 100 });
+        // console.log(product);
+        // product.delete().done((resp) => {
+        //     console.log(resp);
+            // product.title = 'ABCZ';
+            // product.description = 'DEFZ';
+            // product.active = true;
+            // product.onsale = true;
+            // // product.update().done((resp) => {
+            //     console.log(resp);
+                // product.delete().done((resp) => {
+                //     console.log(resp);
+                // })
+            // })
+        // })
     }
 }   

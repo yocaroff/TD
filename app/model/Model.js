@@ -105,8 +105,41 @@ class Model {
         return deferred.promise();
     }
 
-    static select(id) {
-
+    static list = [];
+    static get selected(){
+        let classe = this.prototype.constructor;//this
+        return classe.list.length == 1 ? classe.list[0] : undefined;
+    }
+    static select(params = {}){
+        //Q? Quels sont les paramètres attendus par Rest.get ?
+        let table = this.prototype.constructor.name.toLowerCase();//this.name
+        console.log(table);
+        params.table = table;
+        // let id = params.id
+        // let where = params.where
+        // let orderby = params.orderby
+        let deferred = $.Deferred();
+        let classe = this.prototype.constructor;//this
+        classe.list = [];
+        Rest.get(params).done((resp)=>{
+            //Q? Que renvoi Rest.get ?
+            let json = resp.tryJsonParse();
+            if(json){
+                for(let item of json){
+                    let current = new classe(item)
+                    classe.list.push(current)
+                }
+                deferred.resolve(classe.list)
+            }
+            else{
+                //TODO Afficher un message à l'utilisateur
+                deferred.reject(resp)
+            }
+        }).fail((resp)=>{
+            //TODO Afficher un message à l'utilisateur
+            deferred.reject(resp)
+        })
+        return deferred.promise();
     }
 
 }

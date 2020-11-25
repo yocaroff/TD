@@ -7,6 +7,7 @@ class App {
             App.loadClasses().done(() => {
                 Utils.init();
                 App.browse();
+                App.createMenu();
             });
         }); 
 
@@ -66,10 +67,10 @@ class App {
     }
 
     static test() {
-        let product = new Product({id : 100, active: false, category_id: 3, title: 'ABC', description: 'DEF', price: 10.5, onsale: false, ord: 100 });
+        // let product = new Product({id : 100, active: false, category_id: 3, title: 'ABC', description: 'DEF', price: 10.5, onsale: false, ord: 100 });
         // console.log(product);
-        Model.showTables().done((resp) => {
-            console.log(resp);
+        // Product.select().done((resp) => {
+        //     console.log(resp);
             // product.title = 'ABCZ';
             // product.description = 'DEFZ';
             // product.active = true;
@@ -80,6 +81,21 @@ class App {
                 //     console.log(resp);
                 // })
             // })
+        // })
+    }
+
+    static createMenu() {
+        Model.showTables().done((resp) => {
+            let menu = '';
+            let navbar= $('#headerNavbar').find('ul')[0];
+            $(resp).each((i) => {
+               let tableName = resp[i]['Tables_in_td'];
+               let menuName = tableName.charAt(0).toUpperCase() + tableName.substring(1);
+               menuName = menuName.replaceAll('_', ' ');
+               menu += '<li class="nav-item"><a class="nav-link" href="#'+tableName+'">'+menuName+'</a></li>' ;
+            })
+            $(navbar).html(menu);
         })
+        
     }
 }   

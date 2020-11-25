@@ -6,8 +6,8 @@ class App {
             console.clear();
             App.loadClasses().done(() => {
                 Utils.init();
-                App.browse();
                 App.createMenu();
+                App.browse();
             });
         }); 
 
@@ -28,13 +28,13 @@ class App {
     static browse() {
         //récupérer le hash et l'afficher dans main
         let hash = (window.location.hash || "#accueil").substring(1);
-        App.test();
         // $('main').hide().html(hash).fadeIn(100);
+        Router.start(hash, null);
     }
 
     static classes = ["Utils", "Rest", "model/Model"];
 
-    static extends = ["model/Product", "model/Category"];
+    static extends = ["model/Product", "model/Category", "router/Router"];
 
     static loadClasses() {
         let deferred = $.Deferred();
@@ -90,7 +90,7 @@ class App {
             let navbar= $('#headerNavbar').find('ul')[0];
             $(resp).each((i) => {
                let tableName = resp[i]['Tables_in_td'];
-               let menuName = tableName.charAt(0).toUpperCase() + tableName.substring(1);
+               let menuName = Utils.capitalize(tableName);
                menuName = menuName.replaceAll('_', ' ');
                menu += '<li class="nav-item"><a class="nav-link" href="#'+tableName+'">'+menuName+'</a></li>' ;
             })

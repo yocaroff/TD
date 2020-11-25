@@ -12,4 +12,22 @@ class Utils{
         }
     }
 
+    static capitalize(str) {
+        return str.charAt(0).toUpperCase() + str.substring(1)
+    }
+
+    static tryEval(context) {
+        let value;
+        let expr = this;
+        if(context){
+            expr = "context." + expr
+        }
+        try {
+            value = eval(expr)
+        } catch {
+            console.log("tryEval Error", this)
+        }
+        return value;
+    }
+
 }

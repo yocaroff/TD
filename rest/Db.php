@@ -39,7 +39,7 @@ class Db
             Db::$stmt = $stmt;
             $result = $stmt->execute($params);
         } catch (PDOException $e) {
-            var_dump($e);
+            // var_dump($e);
         }
         return $result;
     }
@@ -60,7 +60,8 @@ class Db
 		$sql = "SELECT * FROM $table WHERE $where ORDER BY $orderby";
 
 		$resp = self::query($sql, $param);
-        $rows = Db::$stmt->fetchAll(PDO::FETCH_ASSOC);
+		$rows = Db::$stmt->fetchAll(PDO::FETCH_ASSOC);
+		// var_dump($rows);
 		return json_encode($rows);
 	}
 
@@ -81,6 +82,7 @@ class Db
 		$sql = "UPDATE $table SET $set WHERE $where";
 		
 		$resp = self::query($sql, $param);
+		$resp = $resp && Db::$stmt->rowCount() == 1;
         return json_encode($resp);
 	}
 
@@ -125,7 +127,7 @@ class Db
 		return json_encode($resp);
 	}
 
-	public function showTables() {
+	public static function showTables() {
 		$sql = "show tables";
 		$param = null;
 		

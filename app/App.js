@@ -6,8 +6,9 @@ class App {
             console.clear();
             App.loadClasses().done(() => {
                 Utils.init();
-                App.createMenu();
-                App.browse();
+                App.createMenu().done(() =>{
+                    App.browse();
+                });
             });
         }); 
 
@@ -28,8 +29,13 @@ class App {
     static browse() {
         //récupérer le hash et l'afficher dans main
         let hash = (window.location.hash || "#accueil").substring(1);
-        // $('main').hide().html(hash).fadeIn(100);
-        Router.start(hash, null);
+        let hashParts = hash.split('/')
+        let route = hashParts[0];
+        let id = hashParts[1];
+
+        Router.start(route, id).done((view) => {
+            $('main').hide().html(view).fadeIn(100);
+        });
     }
 
     static classes = ["Utils", "Rest", "model/Model"];
@@ -83,19 +89,23 @@ class App {
             // })
         // })
     }
+    static menu = '';
+    static navbar = $('#headerNavbar').find('ul')[0];
 
     static createMenu() {
-        Model.showTables().done((resp) => {
-            let menu = '';
-            let navbar= $('#headerNavbar').find('ul')[0];
+        let deferred = $.Deferred();
+        Utils.showTables().done((resp) => {
             $(resp).each((i) => {
                let tableName = resp[i]['Tables_in_td'];
                let menuName = Utils.capitalize(tableName);
                menuName = menuName.replaceAll('_', ' ');
-               menu += '<li class="nav-item"><a class="nav-link" href="#'+tableName+'">'+menuName+'</a></li>' ;
+               App.menu += '<li class="nav-item"><a class="nav-link" href="#'+tableName+'">'+menuName+'</a></li>' ;
             })
-            $(navbar).html(menu);
+
+            $.when.apply($, resp).then(()=>{
+                deferred.resolve(App.menu)
+            })
         })
-        
+        return deferred.promise();
     }
 }   

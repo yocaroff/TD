@@ -30,4 +30,20 @@ class Utils{
         return value;
     }
 
+    static showTables() {
+        let deferred = $.Deferred();
+        Rest.showTables().done((resp) => {
+            let json = resp.tryJsonParse();
+            if (json) {
+                deferred.resolve(json);
+            }
+            else {
+                deferred.reject(json);
+            }
+        }).fail((resp) => {
+            deferred.reject(json);
+        });
+        return deferred.promise();
+    }
+
 }
